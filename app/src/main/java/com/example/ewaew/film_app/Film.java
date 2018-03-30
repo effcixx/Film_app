@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 
 
-public class Film  {
+public class Film  implements Parcelable{
 
     private String title;
     private int idPoster;
@@ -25,6 +25,15 @@ public class Film  {
         this.category = category;
         this.actors = actors;
         this.pictures = pictures;
+    }
+
+    public Film(Parcel input)
+    {
+        title = input.readString();
+        idPoster = input.readInt();
+        category = input.readString();
+        actors = input.readArrayList(Film.class.getClassLoader());
+        pictures = input.readArrayList(Integer.class.getClassLoader());
     }
 
     public ArrayList<Actor> getActors() {
@@ -52,4 +61,30 @@ public class Film  {
         return category;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+        parcel.writeString(this.title);
+        parcel.writeInt(this.idPoster);
+        parcel.writeString(this.category);
+        parcel.writeList(this.actors);
+        parcel.writeList(this.pictures);
+
+    }
+
+    public static final Parcelable.Creator<Film> CREATOR
+            = new Parcelable.Creator<Film>() {
+        public Film createFromParcel(Parcel in) {
+            return new Film(in);
+        }
+
+        public Film[] newArray(int size) {
+            return new Film[size];
+        }
+    };
 }

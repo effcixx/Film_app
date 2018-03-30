@@ -2,6 +2,7 @@ package com.example.ewaew.film_app;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     private List<Film> filmList;
     private CoordinatorLayout coordinatorLayout;
     private MyAdapter adapter;
+    private static final String FILM_LIST = "FILM_LIST";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +31,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
         initialize();
 
+        if(savedInstanceState==null)
+        {
+            addFilmsToList();
+        }
+        else
+        {
+            filmList = savedInstanceState.getParcelableArrayList(FILM_LIST);
+        }
 
-        addFilmsToList();
+
 
         adapter = new MyAdapter(filmList, this);
         recyclerView.setAdapter(adapter);
-
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT,this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
@@ -41,6 +51,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(FILM_LIST, (ArrayList<? extends Parcelable>) filmList);
+    }
+
+    /*@Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        filmList = savedInstanceState.getParcelableArrayList("film");
+        Toast.makeText(getApplicationContext(),"najpier",Toast.LENGTH_SHORT).show();
+        adapter.notifyDataSetChanged();
+
+    }*/
     /*private void saveData()
     {
         SharedPreferences appSharedPrefs = PreferenceManager
@@ -64,14 +88,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         if(filmList ==null)
             filmList = new ArrayList<>();
     }*/
+
+
     private void initialize() {
         recyclerView = findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        filmList = new ArrayList<>();
-        //loadData();
         coordinatorLayout = findViewById(R.id.coordinator_layout);
+        filmList = new ArrayList<>();
     }
 
     private void addFilmsToList() {
@@ -79,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         allFilms.getInstance().initialize(this);
         allFilms.add();
         filmList = allFilms.getFilmList();
-
     }
 
     @Override
