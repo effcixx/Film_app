@@ -90,4 +90,6 @@
     <string name="castellano">Castellano</string>
     <string name="robert">Robert</string>
     <string name="duvall">Duvall</string>
+    <string name="removed">removed from cart!</string>
+    <string name="undo">UNDO</string>
 </resources>
