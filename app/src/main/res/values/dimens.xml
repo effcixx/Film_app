@@ -1,0 +1,11 @@
+<resources>
+    <dimen name="activity_padding_horizontal">16dp</dimen>
+    <dimen name="padd_10">10dp</dimen>
+    <dimen name="ic_delete">30dp</dimen>
+    <dimen name="picture_width">90dp</dimen>
+    <dimen name="picture_height">120dp</dimen>
+    <dimen name="picture_width_description_p">200dp</dimen>
+    <dimen name="picture_height_description_p">300dp</dimen>
+    <dimen name="picture_width_description_l">150dp</dimen>
+    <dimen name="picture_height_description_l">200dp</dimen>
+</resources>
