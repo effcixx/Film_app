@@ -17,9 +17,9 @@ import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
-    public List<Film> filmList;
+    private List<Film> filmList;
 
-    public MyAdapter(List<Film> filmList, Context context) {
+    MyAdapter(List<Film> filmList, Context context) {
         this.filmList = filmList;
         this.context = context;
     }
@@ -46,13 +46,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         });
     }
 
-    public void removeFilm(int position)
+    void removeFilm(int position)
     {
         filmList.remove(position);
-        //notifyDataSetChanged();
         notifyItemRemoved(position);
     }
-    public void restoreFilm(Film film, int position)
+    void restoreFilm(Film film, int position)
     {
         filmList.add(position,film);
         notifyItemInserted(position);
@@ -62,14 +61,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return filmList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder{
 
         private TextView filmCategory;
         private TextView filmTitle;
         private ImageView picture;
-        public RelativeLayout viewBackground, viewForeground;
+        RelativeLayout viewBackground, viewForeground;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
 
             filmCategory = itemView.findViewById(R.id.filmCategory);

@@ -2,17 +2,15 @@ package com.example.ewaew.film_app;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.view.Gravity;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -24,6 +22,12 @@ public class PicturesFromFilm extends Fragment {
     private GriedAdapter griedAdapter;
 
     private static final String FILM_PICTURES = "FILM_PICTURES";
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,7 +52,7 @@ public class PicturesFromFilm extends Fragment {
         LayoutInflater layoutInflater;
         Context context;
 
-        public GriedAdapter(Context context) {
+        GriedAdapter(Context context) {
             this.context = context;
 
         }
@@ -75,12 +79,11 @@ public class PicturesFromFilm extends Fragment {
             if (view == null) {
                 view = layoutInflater.inflate(R.layout.picture_item, null);
             }
-            mV = (View) view;
+            mV = view;
 
 
             ImageView image = mV.findViewById(R.id.imageView);
             image.setImageResource(imageList.get(i));
-
 
             return mV;
         }

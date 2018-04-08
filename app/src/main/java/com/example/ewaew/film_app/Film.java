@@ -19,7 +19,7 @@ public class Film  implements Parcelable{
     private ArrayList<Actor> actors;
     private ArrayList<Integer> pictures;
 
-    public Film(String title, int idPoster, String category, ArrayList<Actor> actors,ArrayList<Integer>pictures) {
+    Film(String title, int idPoster, String category, ArrayList<Actor> actors, ArrayList<Integer> pictures) {
         this.title = title;
         this.idPoster = idPoster;
         this.category = category;
@@ -27,7 +27,7 @@ public class Film  implements Parcelable{
         this.pictures = pictures;
     }
 
-    public Film(Parcel input)
+    private Film(Parcel input)
     {
         title = input.readString();
         idPoster = input.readInt();
@@ -36,11 +36,11 @@ public class Film  implements Parcelable{
         pictures = input.readArrayList(Integer.class.getClassLoader());
     }
 
-    public ArrayList<Actor> getActors() {
+    ArrayList<Actor> getActors() {
         return actors;
     }
 
-    public ArrayList<Integer> getPictures() {
+    ArrayList<Integer> getPictures() {
         return pictures;
     }
 
@@ -49,15 +49,11 @@ public class Film  implements Parcelable{
     }
 
 
-    public int getIdPicture() {
+    int getIdPicture() {
         return idPoster;
     }
 
-    public void setIdPicture(int idPicture) {
-        this.idPoster = idPicture;
-    }
-
-    public String getCategory() {
+    String getCategory() {
         return category;
     }
 

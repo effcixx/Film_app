@@ -4,13 +4,13 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,48 +22,87 @@ public class FilmDescription extends AppCompatActivity {
     private static final String FILM_ACTOR = "FILM_ACTOR";
     private static final String FILM_PICTURES ="FILM_PICTURES";
 
+    private static final String TAG_AF = "AF";
+    private static final String TAG_PF="PF";
+
     private TextView filmCategory;
     private TextView filmTitle;
     private ImageView picture;
 
-    private ArrayList<Actor> actorList;
-    private ArrayList<Integer> pictureList;
+    private Fragment actorF;
+    private Fragment pictureF;
+
+    private Button pictureButton;
+    private Button actorsButton;
+    private Button closeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film_description);
+
         initialize();
 
+        setFragment(savedInstanceState);
+
+        onButtonClick();
     }
-    public void changeFragment(View view)
-    {
-        Fragment fragment;
-        Bundle bundle = new Bundle();
-        if (view == findViewById(R.id.picture_button))
+
+    private void setFragment(Bundle savedInstanceState) {
+        if (savedInstanceState==null)
         {
-            fragment = new PicturesFromFilm();
-            bundle.putIntegerArrayList(FILM_PICTURES,pictureList);
-            fragment.setArguments(bundle);
-        }
-        else if(view == findViewById(R.id.actor_button))
-        {
-            fragment = new ActorsFromFilm();
-            //Toast.makeText(getApplicationContext(),actorList.get(1).getName(),Toast.LENGTH_SHORT).show();
-           // ActorsFromFilm.start(getApplicationContext(),actorList);
-            bundle.putParcelableArrayList(FILM_ACTOR,actorList);
-            fragment.setArguments(bundle);
+            actorF = new ActorsFromFilm();
+            pictureF = new PicturesFromFilm();
+
+            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.contener,actorF,TAG_AF);
+            fragmentTransaction.detach(actorF);
+            fragmentTransaction.add(R.id.contener,pictureF,TAG_PF);
+            fragmentTransaction.detach(pictureF);
+            fragmentTransaction.commit();
         }
         else
         {
-            fragment = new Fragment();
+            actorF = getFragmentManager().findFragmentByTag(TAG_AF);
+            pictureF = getFragmentManager().findFragmentByTag(TAG_PF);
         }
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.my_fragment,fragment);
-        fragmentTransaction.commit();
     }
+
+    private void onButtonClick() {
+        pictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.attach(pictureF);
+                fragmentTransaction.detach(actorF);
+                fragmentTransaction.commit();
+            }
+        });
+        actorsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.attach(actorF);
+                fragmentTransaction.detach(pictureF);
+                fragmentTransaction.commit();
+            }
+        });
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.detach(actorF);
+                fragmentTransaction.detach(pictureF);
+                fragmentTransaction.commit();
+            }
+        });
+    }
+
     private void initialize() {
+
+        pictureButton = findViewById(R.id.picture_button);
+        actorsButton = findViewById(R.id.actor_button);
+        closeButton = findViewById(R.id.close_button);
 
         Intent intent = getIntent();
         filmCategory =findViewById(R.id.filmCategory);
@@ -72,9 +111,9 @@ public class FilmDescription extends AppCompatActivity {
         filmCategory.setText(intent.getStringExtra(FILM_CATEGORY));
         filmTitle.setText(intent.getStringExtra(FILM_TITLE));
         picture.setImageResource(intent.getIntExtra(FILM_POSTER,0));
-        actorList =intent.getParcelableArrayListExtra(FILM_ACTOR);
-        pictureList = intent.getIntegerArrayListExtra(FILM_PICTURES);
-
+        ArrayList<Actor> actorList = intent.getParcelableArrayListExtra(FILM_ACTOR);
+        ArrayList<Integer> pictureList = intent.getIntegerArrayListExtra(FILM_PICTURES);
+        FrameLayout contener = findViewById(R.id.contener);
     }
 
     public static void start(Context context,String title, int idPoster, String category,ArrayList<Actor>actorList,ArrayList<Integer>pictureList) {

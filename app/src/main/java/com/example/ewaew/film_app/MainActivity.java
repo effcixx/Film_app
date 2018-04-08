@@ -31,24 +31,23 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
         initialize();
 
-        if(savedInstanceState==null)
-        {
-            addFilmsToList();
-        }
-        else
-        {
-            filmList = savedInstanceState.getParcelableArrayList(FILM_LIST);
-        }
-
+        restoreListOrAddNew(savedInstanceState);
 
 
         adapter = new MyAdapter(filmList, this);
         recyclerView.setAdapter(adapter);
 
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT,this);
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
 
+    }
+
+    private void restoreListOrAddNew(Bundle savedInstanceState) {
+        if(savedInstanceState==null)
+            addFilmsToList();
+        else
+            filmList = savedInstanceState.getParcelableArrayList(FILM_LIST);
     }
 
     @Override
@@ -56,38 +55,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(FILM_LIST, (ArrayList<? extends Parcelable>) filmList);
     }
-
-    /*@Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        filmList = savedInstanceState.getParcelableArrayList("film");
-        Toast.makeText(getApplicationContext(),"najpier",Toast.LENGTH_SHORT).show();
-        adapter.notifyDataSetChanged();
-
-    }*/
-    /*private void saveData()
-    {
-        SharedPreferences appSharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this.getApplicationContext());
-        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(filmList);
-        prefsEditor.putString("MyObject", json);
-        prefsEditor.apply();
-    }
-
-    private void loadData()
-    {
-        SharedPreferences appSharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(this.getApplicationContext());
-        SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
-        Gson gson = new Gson();
-        String json = appSharedPrefs.getString("MyObject", "");
-        Type type = new TypeToken<ArrayList<Film>>(){}.getType();
-        filmList = (List<Film>) gson.fromJson(json, type);
-        if(filmList ==null)
-            filmList = new ArrayList<>();
-    }*/
 
 
     private void initialize() {
@@ -100,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
     private void addFilmsToList() {
         AllFilms allFilms = AllFilms.getInstance();
-        allFilms.getInstance().initialize(this);
+        AllFilms.getInstance().initialize(this);
         allFilms.add();
         filmList = allFilms.getFilmList();
     }
