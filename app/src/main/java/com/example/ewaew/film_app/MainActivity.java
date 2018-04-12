@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
             addFilmsToList();
         else
             filmList = savedInstanceState.getParcelableArrayList(FILM_LIST);
+
     }
 
     @Override
@@ -66,9 +66,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     }
 
     private void addFilmsToList() {
+
         AllFilms allFilms = AllFilms.getInstance();
         AllFilms.getInstance().initialize(this);
-        allFilms.add();
+        if (allFilms.getFilmList().size()==0)
+            allFilms.add();
+
         filmList = allFilms.getFilmList();
     }
 
